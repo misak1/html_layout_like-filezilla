@@ -5,44 +5,61 @@ $(function () {
 
 function resize() {
     var h = (window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight));
-    var divHight = 20 + $("#div_left").height();//20=body padding:10px
-    $("#content").css({ "min-height": (h - divHight) * 0.6 + "px" });
-    $("#div_vertical").css({ "height": (h - divHight) * 0.6 + "px" });
-    $("#LeftPanel").css({ "height": (h - divHight) * 0.6 + "px" });
+    // var divHight = 20 + $("#div_left").height();//20=body padding:10px
+    var divHight =  $("#div_left").height();//20=body padding:10px
+    
+    // $(#content).height() "%" style 
+    // Math.floor($('#content').height() / $(window).height() * 100) + "%"
+    var window_height = $(window).height();
+    var ratio =  Math.floor($('#content').height() / window_height * 100) / 100;
+    var HeaderFooter =  Math.floor($('.content-header').height() +  $('.content-footer').height());
+    
+    $("#content").css({ "min-height": (h - divHight) * ratio});
+    $("#div_vertical").css({ "height": (h - divHight) * ratio});
+    $("#LeftPanel").css({ "height": (h - divHight) * ratio});
     var content_width = $("#content").width();
+    var RightPanelHeight = (h - divHight)  * ratio;
     var RightPanelWidth = content_width - $("#LeftPanel").width() - $("#div_vertical").width();
     $("#RightPanel").css({
-        "height": (h - divHight) * 0.6 + "px",
-        "width": RightPanelWidth + "px"
+        "height": RightPanelHeight,
+        "width": RightPanelWidth
     });
+    var footer_margin_bottom = 25;
+    $(".content-footer").height(Math.floor(window_height - ($('.content-header').height() + RightPanelHeight)) - footer_margin_bottom);
 }
 
-jQuery.resizable = function(resizerID, vOrH){
-    jQuery('#' + resizerID).bind("mousedown", function(e){
+$.resizable = function(resizerID, vOrH){
+    $('#' + resizerID).bind("mousedown", function(e){
     var start = e.pageY;
     if(vOrH=='v') start = e.pageX;
-    jQuery('body').bind("mouseup", function(){
-        jQuery('body').unbind("mousemove");
-        jQuery('body').unbind("mouseup");
+    $('body').bind("mouseup", function(){
+        $('body').unbind("mousemove");
+        $('body').unbind("mouseup");
         
     });
-    jQuery('body').bind("mousemove", function(e){
+    $('body').bind("mousemove", function(e){
         var end = e.pageY;
         if(vOrH=='v') end = e.pageX;
-        
         if(vOrH=='h'){
-            // jQuery('#' + resizerID).prev().height(jQuery('#' + resizerID).prev().height()+ (end-start)); 
-            // jQuery('#' + resizerID).next().height(jQuery('#' + resizerID).next().height()- (end-start)); 
+            // console.log('resizerID', resizerID);
+            // タテ
+            // console.log('end-start', end-start);
+            if($('#editaria').height() > 30 || (end-start) < 0){
+                $('#content').height($('#content').height()+ (end-start));
+            }
+            resize();
+            // $('#' + resizerID).prev().height($('#' + resizerID).prev().height()+ (end-start)); 
+            // $('#' + resizerID).next().height($('#' + resizerID).next().height()- (end-start)); 
         }
         else{
-            var leftwidth = jQuery('#' + resizerID).prev().width()+ (end-start); 
-            var rightWidth = jQuery('#' + resizerID).next().width()- (end-start);
+            // ヨコ
+            var leftwidth = $('#' + resizerID).prev().width()+ (end-start); 
+            var rightWidth = $('#' + resizerID).next().width()- (end-start);
 
+            // 段落ち対策
             if(30 < leftwidth && rightWidth > 30){
-                jQuery('#' + resizerID).prev().width(leftwidth);
-                jQuery('#' + resizerID).next().width(rightWidth);
-            }else{
-                console.log("E");
+                $('#' + resizerID).prev().width(leftwidth);
+                $('#' + resizerID).next().width(rightWidth);
             }
         }
         start = end;
@@ -50,6 +67,6 @@ jQuery.resizable = function(resizerID, vOrH){
 });
 }
     
-jQuery.resizable('div_vertical', "v");
-jQuery.resizable('div_right', "h");
-jQuery.resizable('div_left', "h");
+$.resizable('div_vertical', "v");
+$.resizable('div_right', "h");
+$.resizable('div_left', "h");
