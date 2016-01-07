@@ -5,27 +5,27 @@ $(function () {
 
 function resize() {
     var h = (window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight));
-    // var divHight = 20 + $("#div_left").height();//20=body padding:10px
     var divHight =  $("#div_left").height();//20=body padding:10px
     
     // $(#content).height() "%" style 
     // Math.floor($('#content').height() / $(window).height() * 100) + "%"
-    var window_height = $(window).height();
-    var ratio =  Math.floor($('#content').height() / window_height * 100) / 100;
-    var HeaderFooter =  Math.floor($('.content-header').height() +  $('.content-footer').height());
+
+    var ratio =  Math.floor($('#content').height() / h * 100) / 100;
+    // var HeaderFooter =  Math.floor($('.content-header').height() +  $('.content-footer').height());
     
-    $("#content").css({ "min-height": (h - divHight) * ratio});
-    $("#div_vertical").css({ "height": (h - divHight) * ratio});
-    $("#LeftPanel").css({ "height": (h - divHight) * ratio});
+    var panelHeight = (h - divHight) * ratio;
+    // console.log('panelHeight', panelHeight);
+    $("#content").css({ "min-height": panelHeight});
+    $("#div_vertical").css({ "height": panelHeight});
+    $("#LeftPanel").css({ "height": panelHeight});
     var content_width = $("#content").width();
-    var RightPanelHeight = (h - divHight)  * ratio;
     var RightPanelWidth = content_width - $("#LeftPanel").width() - $("#div_vertical").width();
     $("#RightPanel").css({
-        "height": RightPanelHeight,
+        "height": panelHeight,
         "width": RightPanelWidth
     });
     var footer_margin_bottom = 25;
-    $(".content-footer").height(Math.floor(window_height - ($('.content-header').height() + RightPanelHeight)) - footer_margin_bottom);
+    $(".content-footer").height(Math.floor(h - ($('.content-header').height() +  panelHeight)) - footer_margin_bottom);
 }
 
 $.resizable = function(resizerID, vOrH){
@@ -46,8 +46,8 @@ $.resizable = function(resizerID, vOrH){
             // console.log('end-start', end-start);
             if($('#editaria').height() > 30 || (end-start) < 0){
                 $('#content').height($('#content').height()+ (end-start));
+                resize();
             }
-            resize();
             // $('#' + resizerID).prev().height($('#' + resizerID).prev().height()+ (end-start)); 
             // $('#' + resizerID).next().height($('#' + resizerID).next().height()- (end-start)); 
         }
