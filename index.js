@@ -12,10 +12,8 @@ var divHeight =  $("#div_left").height();
 var winHeight;
 
 function resize() {
-
     winHeight = (window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight));
 
-    //20=body padding:10px
     var ratio =  $content.height() / winHeight;
     var panelHeight = Math.ceil((winHeight - divHeight) * ratio);
 
@@ -49,8 +47,8 @@ $.resizable = function(resizerID, vOrH){
     $('body').bind("mousemove", function(e){
         var end = vOrH === 'v' ? e.pageX : e.pageY;
         if(vOrH=='h'){
+            // タテ
             var newHeight = height + (end - start);
-            // console.log(newHeight);
             if(newHeight > content_margin_side ||  newHeight < 0){
                 $content.height(newHeight);
 
@@ -58,10 +56,7 @@ $.resizable = function(resizerID, vOrH){
                 $("#div_vertical").css({ "height": newHeight});
                 $("#LeftPanel, #RightPanel").css({ "height": newHeight - divHeight});
                 $(".content-footer").height(winHeight - (headerHeight + newHeight + footer_margin_bottom));
-                // resize();
-            }
-            // $('#' + resizerID).prev().height($('#' + resizerID).prev().height()+ (end-start)); 
-            // $('#' + resizerID).next().height($('#' + resizerID).next().height()- (end-start)); 
+            } 
         }
         else{
             // ヨコ
