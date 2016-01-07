@@ -10,12 +10,13 @@ function resize() {
     // $(#content).height() "%" style 
     // Math.floor($('#content').height() / $(window).height() * 100) + "%"
 
-    var ratio =  Math.floor($('#content').height() / h * 100) / 100;
+    var ratio =  ($('#content').height() / h * 100) / 100;
     // var HeaderFooter =  Math.floor($('.content-header').height() +  $('.content-footer').height());
     
-    var panelHeight = (h - divHight) * ratio;
+    var panelHeight = Math.ceil((h - divHight) * ratio);
     // console.log('panelHeight', panelHeight);
     $("#content").css({ "min-height": panelHeight});
+    // $("#content").css({ "height": panelHeight});
     $("#div_vertical").css({ "height": panelHeight});
     $("#LeftPanel").css({ "height": panelHeight});
     var content_width = $("#content").width();
@@ -25,7 +26,8 @@ function resize() {
         "width": RightPanelWidth
     });
     var footer_margin_bottom = 25;
-    $(".content-footer").height(Math.floor(h - ($('.content-header').height() +  panelHeight)) - footer_margin_bottom);
+    $(".content-footer").height(Math.ceil(h - ($('.content-header').height() +  panelHeight)) - footer_margin_bottom);
+    // $("#content").css({ "height": panelHeight + divHight});
 }
 
 $.resizable = function(resizerID, vOrH){
@@ -44,8 +46,11 @@ $.resizable = function(resizerID, vOrH){
             // console.log('resizerID', resizerID);
             // タテ
             // console.log('end-start', end-start);
-            if($('#editaria').height() > 30 || (end-start) < 0){
-                $('#content').height($('#content').height()+ (end-start));
+            var es = (end-start);
+            if($('#editaria').height() > 30 ||  es < 0){
+                $('#content').height($('#content').height()+ es);
+                // $('#content').height($('#content').height()+ (end-start));
+                // $("#content").css({ "min-height": $('#content').height()+ (end-start)});
                 resize();
             }
             // $('#' + resizerID).prev().height($('#' + resizerID).prev().height()+ (end-start)); 
