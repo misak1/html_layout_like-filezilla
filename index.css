@@ -1,0 +1,99 @@
+body {
+    background: none repeat scroll 0 0 #EFEFEF;
+    overflow: hidden;
+    position: relative;
+    margin: 0px;
+    padding: 0px;
+}
+html, body {
+height: 100%;
+}
+div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, textarea, p, blockquote, th, td {
+    margin: 0;
+    padding: 0;
+}
+fieldset{
+    border: 0 none;
+}
+#LeftPanel
+{
+    width: 50%;
+    float: left;
+}
+#RightPanel
+{
+    width: 50%;
+    float: right;
+}
+.handler_vertical {
+    cursor: col-resize;
+    width: 8px;
+    float: left;
+}
+.handler_horizontal {
+    cursor: row-resize;
+    height: 8px;
+    width: 100%;
+    float: left;
+}
+.window {
+    border: 1px solid #ADADAD;
+    width: 100%;
+    float: left;
+}
+.top {
+    /*height: 100%;*/
+    height:100%;
+}
+.bottom {
+    height: 0%;
+}
+
+.main{
+    height:100%;
+    /*display: table;*/
+}
+.content-header{
+    /*display:table-cell;*/
+    /*height:20%;*/
+    /*height: 40px;*/
+    overflow-x:scroll;
+}
+#content{
+    /*display:table-cell;*/
+    height:60%;
+}
+.content-footer{
+    /*display:table-cell;*/
+    /*height:20%;*/
+    height:20%;
+}
+
+/* header */
+/* 横スクロールリストの要素 */
+div.item {
+    /* 程よい余白のため */
+    margin: 0px 5px 0px 0px;
+    padding: 5px;
+    /* 程よいサイズ */
+    width: 100px;
+    height: 30px;
+    /* 枠線 */
+    border: 1px solid black;
+    /* インラインブロックにして改行しないブロックに */
+    display: inline-block;
+}
+
+/* 横スクロールリストのコンテナ */
+div.container {
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+/* /header */
+
+/* footer */
+#editaria{
+    width:100%;
+    height:100%;
+}
+/* /footer */
