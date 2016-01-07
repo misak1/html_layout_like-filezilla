@@ -3,71 +3,77 @@ $(function () {
     resize();
 });
 
-function resize() {
-    var h = (window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight));
-    var divHight =  $("#div_left").height();//20=body padding:10px
-    
-    // $(#content).height() "%" style 
-    // Math.floor($('#content').height() / $(window).height() * 100) + "%"
+var $content = $("#content");
 
-    var ratio =  ($('#content').height() / h * 100) / 100;
-    // var HeaderFooter =  Math.floor($('.content-header').height() +  $('.content-footer').height());
-    
-    var panelHeight = Math.ceil((h - divHight) * ratio);
-    // console.log('panelHeight', panelHeight);
+var headerHeight = $('.content-header').height();
+var content_margin_side = 30;
+var footer_margin_bottom = 5;
+var divHeight =  $("#div_left").height();
+var winHeight;
+
+function resize() {
+
+    winHeight = (window.innerHeight || (window.document.documentElement.clientHeight || window.document.body.clientHeight));
+
+    //20=body padding:10px
+    var ratio =  $content.height() / winHeight;
+    var panelHeight = Math.ceil((winHeight - divHeight) * ratio);
+
     $("#content").css({ "min-height": panelHeight});
-    // $("#content").css({ "height": panelHeight});
     $("#div_vertical").css({ "height": panelHeight});
-    $("#LeftPanel").css({ "height": panelHeight});
+    $("#LeftPanel").css({ "height": panelHeight - divHeight});
+
     var content_width = $("#content").width();
     var RightPanelWidth = content_width - $("#LeftPanel").width() - $("#div_vertical").width();
     $("#RightPanel").css({
-        "height": panelHeight,
+        "height": panelHeight - divHeight,
         "width": RightPanelWidth
     });
-    var footer_margin_bottom = 25;
-    $(".content-footer").height(Math.ceil(h - ($('.content-header').height() +  panelHeight)) - footer_margin_bottom);
-    // $("#content").css({ "height": panelHeight + divHight});
+
+    $(".content-footer").height(winHeight - (headerHeight + panelHeight + footer_margin_bottom));
 }
 
 $.resizable = function(resizerID, vOrH){
     $('#' + resizerID).bind("mousedown", function(e){
-    var start = e.pageY;
-    if(vOrH=='v') start = e.pageX;
+
+    var start = vOrH === 'v' ? e.pageX : e.pageY;
+    var height = $content.height();
+    var leftwidth = $('#' + resizerID).prev().width();
+    var rightwidth = $('#' + resizerID).next().width();
+
     $('body').bind("mouseup", function(){
         $('body').unbind("mousemove");
         $('body').unbind("mouseup");
         
     });
     $('body').bind("mousemove", function(e){
-        var end = e.pageY;
-        if(vOrH=='v') end = e.pageX;
+        var end = vOrH === 'v' ? e.pageX : e.pageY;
         if(vOrH=='h'){
-            // console.log('resizerID', resizerID);
-            // タテ
-            // console.log('end-start', end-start);
-            var es = (end-start);
-            if($('#editaria').height() > 30 ||  es < 0){
-                $('#content').height($('#content').height()+ es);
-                // $('#content').height($('#content').height()+ (end-start));
-                // $("#content").css({ "min-height": $('#content').height()+ (end-start)});
-                resize();
+            var newHeight = height + (end - start);
+            // console.log(newHeight);
+            if(newHeight > content_margin_side ||  newHeight < 0){
+                $content.height(newHeight);
+
+                $("#content").css({ "min-height": newHeight});
+                $("#div_vertical").css({ "height": newHeight});
+                $("#LeftPanel, #RightPanel").css({ "height": newHeight - divHeight});
+                $(".content-footer").height(winHeight - (headerHeight + newHeight + footer_margin_bottom));
+                // resize();
             }
             // $('#' + resizerID).prev().height($('#' + resizerID).prev().height()+ (end-start)); 
             // $('#' + resizerID).next().height($('#' + resizerID).next().height()- (end-start)); 
         }
         else{
             // ヨコ
-            var leftwidth = $('#' + resizerID).prev().width()+ (end-start); 
-            var rightWidth = $('#' + resizerID).next().width()- (end-start);
+            var newLeftWidth = leftwidth + (end - start); 
+            var newRightWidth = rightwidth - (end - start);
 
             // 段落ち対策
-            if(30 < leftwidth && rightWidth > 30){
-                $('#' + resizerID).prev().width(leftwidth);
-                $('#' + resizerID).next().width(rightWidth);
+            if(content_margin_side < newLeftWidth && newRightWidth > content_margin_side){
+                $('#' + resizerID).prev().width(newLeftWidth);
+                $('#' + resizerID).next().width(newRightWidth);
             }
         }
-        start = end;
     });
 });
 }
